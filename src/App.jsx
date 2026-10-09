@@ -1,80 +1,113 @@
-import { useState } from "react";
+import { useState } from "react"
 
 function App() {
-  const [todoList, setTodoList] = useState([]);
-  const [todoInputText, setTodoInputText] = useState("");
+  const [todoInputText, setTodoInputText] = useState("")
+  const [todoList, setTodoList] = useState([])
 
   const handleInputText = (e) => {
-    setTodoInputText(e.target.value);
-  };
+    setTodoInputText(e.target.value)
+  }
 
   const addToList = (e) => {
-    e.preventDefault();
-    setTodoList([todoInputText, ...todoList]);
-    setTodoInputText("");
-  };
+    e.preventDefault()
+
+    if (todoInputText === "") return
+
+    setTodoList([todoInputText, ...todoList])
+    setTodoInputText("")
+  }
 
   const removeTodo = (indexToDelete) => {
-    const updatedArray = todoList.filter((todo, index) => {
-      if (index != indexToDelete) {
-        return todo;
-      }
-    });
-    setTodoList(updatedArray);
-  };
+    const updatedList = todoList.filter((todo, index) => {
+      return index !== indexToDelete
+    })
+
+    setTodoList(updatedList)
+  }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-950 px-4 py-10">
+    <div className="min-h-screen bg-slate-950 px-4 py-10 text-white">
+      <div className="mx-auto max-w-2xl">
 
-      <div className="w-full max-w-lg rounded-[28px] border border-white/10 bg-white/[0.07] p-7 shadow-[0_25px_70px_rgba(0,0,0,0.45)] backdrop-blur-2xl sm:p-9">
+        <div className="mb-8 text-center">
+          <h1 className="text-4xl font-bold sm:text-5xl">
+            Todo App
+          </h1>
 
-        <h1 className="mb-8 text-center text-4xl font-bold tracking-tight text-white">
-          Todo App
-        </h1>
-
-        <form onSubmit={addToList} className="space-y-4">
-
-          <input
-            type="text"
-            placeholder="Enter your todo"
-            value={todoInputText}
-            onChange={handleInputText}
-            className="w-full rounded-2xl border border-white/10 bg-black/20 px-5 py-4 text-[15px] text-white outline-none transition-all duration-300 placeholder:text-slate-500 focus:border-indigo-400/60 focus:bg-black/30 focus:ring-4 focus:ring-indigo-500/10"
-          />
-
-          <button
-            className="w-full rounded-2xl bg-gradient-to-r from-indigo-500 to-violet-500 py-4 font-semibold text-white shadow-lg shadow-indigo-500/20 transition-all duration-300 hover:-translate-y-0.5 hover:from-indigo-400 hover:to-violet-400 hover:shadow-indigo-500/30 active:scale-[0.98]"
-          >
-            Add
-          </button>
-
-        </form>
-
-        <div className="mt-8 space-y-3">
-
-          {todoList.map((todo, index) => {
-            return (
-              <p
-                key={index}
-                className="animate-[fadeIn_0.35s_ease-out] rounded-2xl border border-white/10 bg-white/[0.06] px-5 py-4 text-[15px] text-slate-200 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-indigo-400/30 hover:bg-white/[0.09]"
-              >
-                {todo}
-              </p>
-            );
-          })}
-
+          <p className="mt-3 text-slate-400">
+            Manage your daily tasks with style.
+          </p>
         </div>
 
-        <button
-          onClick={() => removeTodo(0)}
-          className="mt-8 w-full rounded-2xl border border-red-400/20 bg-red-500/[0.08] py-3.5 font-medium text-red-300 transition-all duration-300 hover:-translate-y-0.5 hover:border-red-400/30 hover:bg-red-500/[0.14] active:scale-[0.98]"
-        >
-          Remove
-        </button>
+        <div className="rounded-2xl border border-slate-800 bg-slate-900 p-5 sm:p-7">
 
+          <form
+            onSubmit={addToList}
+            className="flex flex-col gap-3 sm:flex-row"
+          >
+            <input
+              type="text"
+              placeholder="Enter your todo..."
+              value={todoInputText}
+              onChange={handleInputText}
+              className="flex-1 rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 outline-none focus:border-violet-500"
+            />
+
+            <button
+              type="submit"
+              className="rounded-xl bg-violet-600 px-6 py-3 font-semibold hover:bg-violet-700"
+            >
+              Add
+            </button>
+          </form>
+
+          <div className="my-6 flex items-center justify-between border-b border-slate-800 pb-4">
+            <h2 className="font-semibold">My Tasks</h2>
+
+            <span className="rounded-lg bg-violet-600 px-4 py-2 font-bold">
+              {todoList.length}
+            </span>
+          </div>
+
+          <div className="space-y-3">
+            {todoList.length === 0 ? (
+              <div className="rounded-xl border border-dashed border-slate-700 py-10 text-center">
+                <p className="text-sm text-slate-400">
+                  Add a task to get started.
+                </p>
+              </div>
+            ) : (
+              todoList.map((todo, index) => (
+                <div
+                  key={index}
+                  className="flex items-center justify-between gap-3 rounded-xl border border-slate-800 bg-slate-950 p-4"
+                >
+                  <div className="flex min-w-0 items-center gap-3">
+                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-violet-600/20 text-violet-400">
+                      {index + 1}
+                    </span>
+
+                    <p className="break-words text-sm sm:text-base">
+                      {todo}
+                    </p>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => removeTodo(index)}
+                    className="shrink-0 rounded-lg bg-red-600/15 px-3 py-2 text-sm text-red-400 hover:bg-red-600 hover:text-white"
+                  >
+                    Remove
+                  </button>
+                </div>
+              ))
+            )}
+          </div>
+
+        </div>
       </div>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
